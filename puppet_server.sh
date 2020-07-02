@@ -1,11 +1,9 @@
-# puppet_agent_ip = 3.234.217.184
-# puppet_master_ip = 54.145.237.184
+#!/bin/bash
 
 sudo yum -y update
 sudo yum -y install wget curl vim bash-completion
-sudo hostnamectl set-hostname puppetmaster
 
-echo "54.145.237.184 puppetmaster" | sudo tee -a /etc/hosts
+sudo hostnamectl set-hostname puppet
 sudo systemctl restart systemd-hostnamed
 
 sudo yum -y install chrony
@@ -20,18 +18,24 @@ sudo yum makecache
 
 sudo yum -y install puppetserver
 
-# /etc/puppetlabs/puppet/puppet.conf
-# Add the DNS settings under the [master] section.
-echo "dns_alt_names = puppetmaster puppet" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
+# disable SELINUX
 
+# echo "3.236.50.58 puppetagent" | sudo tee -a /etc/hosts
+# echo "3.236.8.222 puppet" | sudo tee -a /etc/hosts
+
+
+# # /etc/puppetlabs/puppet/puppet.conf
+# # Add the DNS settings under the [master] section.
+
+echo "dns_alt_names = puppet" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "[main]" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
-echo "certname = puppetmaster" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
-echo "server = puppetmaster" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
+echo "certname = puppet" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
+echo "server = puppet" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "environment = production" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "runinterval = 1h" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 
 sudo systemctl enable --now puppetserver
-sudo systemctl restart puppetserver
+sudo systemctl start puppetserver
 
 echo "export PATH=$PATH:/opt/puppetlabs/bin" | sudo tee -a ~/.bashrc
 source ~/.bashrc
