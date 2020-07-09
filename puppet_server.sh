@@ -20,23 +20,24 @@ sudo yum -y install puppetserver
 
 # disable SELINUX
 
-echo "3.214.217.253 puppetagent" | sudo tee -a /etc/hosts
-echo "3.236.83.80 puppet" | sudo tee -a /etc/hosts
+echo "3.236.17.141 puppetagent" | sudo tee -a /etc/hosts
+echo "18.207.159.230 puppet" | sudo tee -a /etc/hosts
 
 
 # # /etc/puppetlabs/puppet/puppet.conf
 # # Add the DNS settings under the [master] section.
 
-echo "[master]" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
-echo "dns_alt]_names = puppet" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
+echo "dns_alt_names = puppet.ec2" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "[main]" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "certname = puppet" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "server = puppet" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "environment = production" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "runinterval = 1h" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 
-sudo systemctl enable --now puppetserver
-sudo systemctl start puppetserver
-
 echo "export PATH=$PATH:/opt/puppetlabs/bin" | sudo tee -a ~/.bashrc
 source ~/.bashrc
+
+sudo systemctl start puppetserver
+sudo systemctl enable --now puppetserver
+
+puppetserver ca setup

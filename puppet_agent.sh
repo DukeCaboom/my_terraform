@@ -9,7 +9,10 @@ sudo systemctl restart systemd-hostnamed
 sudo yum -y install https://yum.puppetlabs.com/puppet-release-el-7.noarch.rpm
 sudo yum -y install puppet-agent
 
-# echo "54.145.237.184 puppet" | sudo tee -a /etc/hosts
+echo "18.207.159.230 puppet" | sudo tee -a /etc/hosts
+
+echo "export PATH=$PATH:/opt/puppetlabs/bin" | sudo tee -a ~/.bashrc
+source ~/.bashrc
 
 # # /etc/puppetlabs/puppet/puppet.conf
 
@@ -18,7 +21,7 @@ echo "certname = puppetagent" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "server = puppet" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 echo "environment = production" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf
 
-puppet agent --test --ca_server=puppetmaster
+puppet agent --test --ca_server=puppet
 
 
 
