@@ -7,8 +7,8 @@ data "aws_ami" "puppet_ami" {
   owners      = ["aws-marketplace"]
 
   filter {
-    name   = "name"
-    values = ["CentOS Linux 7 x86_64*"]
+    name   = "image-id"
+    values = ["ami-0d03e44a2333dea65"]
   }
 }
 
@@ -41,7 +41,6 @@ resource "aws_instance" "puppet_master" {
   instance_type   = "t2.medium"
   security_groups = ["${aws_security_group.puppet_sg_tf.name}"]
   key_name        = "aws-default-pair"
-  # user_data = file("puppet_server.sh")
 
   tags = {
     Name = "puppet_master"
