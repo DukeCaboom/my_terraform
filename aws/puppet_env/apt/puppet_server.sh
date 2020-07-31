@@ -17,5 +17,6 @@ sed -i "s/$hostname/$env/g" /etc/hostname
 sed -i "s/no/yes/g"  /etc/default/puppet-master
 echo "127.0.0.1  puppet.example.net    puppet" >>  /etc/hosts
 # TODO: dynamically fetch the IP address
-echo "172.31.44.238  puppet.example.net    puppet" >>  /etc/hosts
-reboot
+ipv4=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
+echo "${ipv4}  puppet.example.net    puppet" >>  /etc/hosts
+# reboot

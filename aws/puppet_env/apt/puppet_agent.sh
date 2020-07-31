@@ -15,8 +15,8 @@ apt-get update -y
 apt-get -y install puppet
 sed -i "s/$hostname/$env/g" /etc/hostname
 # TODO: dynamically fetch the IP address
-echo "3.95.133.188  puppet.example.net    puppet" >>  /etc/hosts
-echo "3.95.133.188  puppet" >>  /etc/hosts
-reboot
+echo "${2}  puppet.example.net    puppet" >>  /etc/hosts
+echo "${2}  puppet" >>  /etc/hosts
+# reboot
 
 # puppet agent --waitforcert 60

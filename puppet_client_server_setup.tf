@@ -51,6 +51,24 @@ resource "aws_instance" "puppet_master" {
     volume_size = 25
   }
 
+  provisioner "file" {
+    # TODO: source should consider both apt and yum folders dynamically
+    source = "./aws/puppet_env/apt/puppet_server.sh"
+    destination = "/tmp/puppet_server.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/puppet_server.sh",
+      "sudo /tmp/puppet_server.sh puppet"
+    ]
+    connection {
+      type = "ssh"
+      host = self.public_ip
+      private_key = "${file("~/.aws/my_aws_pems/aws-default-pair.pem")}"
+      user = "ubuntu"
+    }
+  }
 }
 resource "aws_instance" "puppet_agent" {
   ami             = data.aws_ami.puppet_ami.id
@@ -66,6 +84,24 @@ resource "aws_instance" "puppet_agent" {
   root_block_device {
     volume_type = "gp2"
     volume_size = 25
+  }
+
+  # provisioner "file" {
+  #   # TODO: source should consider both apt and yum folders dynamically
+  #   source = "./aws/puppet_env/apt/puppet_agent.sh"
+  #   destination = "/tmp/puppet_agent.sh"
+  # }
+
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "chmod +x /tmp/puppet_agent.sh",
+  #     "sudo /tmp/puppet_agent.sh agent ${aws_instance.puppet_master.public_ip}" 
+  #   ]
+  # }  
+
+  provisioner "puppet" {
+    server = aws_instance.puppet_master.public_ip
+    server_user = "ubuntu"  
   }
 }
 
