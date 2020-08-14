@@ -41,3 +41,5 @@ Thumbs.db
 terraform.tfstate
 terraform.tfstate.backup
 .terraform/plugins/darwin_amd64/
+.out
+.terraform/

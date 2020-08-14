@@ -44,7 +44,7 @@ resource "aws_instance" "puppet_master" {
   instance_type   = "t2.medium"
   security_groups = ["${aws_security_group.puppet_sg_tf.name}"]
   key_name        = "aws-default-pair"
-  user_data       = file("./aws/puppet_env/apt/user_data_master.sh")
+  user_data       = file("./apt/user_data_master.sh")
   tags = {
     Name = "puppet_master"
   }
@@ -53,18 +53,6 @@ resource "aws_instance" "puppet_master" {
     volume_size = 25
   }
 }
-
-# resource "aws_security_group_rule" "open_8140_for_all" {
-#   type      = "ingress"
-#   to_port   = 8140
-#   from_port = 8140
-#   protocol  = "tcp"
-#   # cidr_blocks = ["${aws_instance.puppet_master.public_ip}/32", "${aws_instance.puppet_agent.public_ip}/32"]
-#   cidr_blocks       = ["0.0.0.0/0"]
-#   security_group_id = aws_security_group.puppet_sg_tf.id
-#   description       = "created via my_terraform repo. allow 8140 on puppet master."
-# }
-
 
 resource "aws_instance" "puppet_agent" {
   ami             = data.aws_ami.puppet_ami.id
@@ -85,7 +73,7 @@ resource "aws_instance" "puppet_agent" {
     private_key = file("~/.aws/my_aws_pems/aws-default-pair.pem")
   }
   provisioner "file" {
-    source      = "./aws/puppet_env/apt/activate_agent.sh"
+    source      = "./apt/activate_agent.sh"
     destination = "/tmp/activate_agent.sh"
 
   }
